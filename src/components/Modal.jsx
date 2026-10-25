@@ -33,7 +33,7 @@ export default function Modal({ aberto, aoFechar, titulo, children }) {
           type="button"
           onClick={aoFechar}
           aria-label="Fechar"
-          className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md hover:opacity-70"
+          className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md hover:opacity-70 cursor-pointer"
         >
           <IconeFechar className="h-6 w-6" />
         </button>

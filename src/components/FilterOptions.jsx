@@ -30,7 +30,7 @@ export default function FilterOptions({ opcoes }) {
                   role="checkbox"
                   aria-checked={marcada}
                   onClick={() => alternar(opcao)}
-                  className="flex items-center gap-2 text-sm font-semibold uppercase text-white hover:opacity-80"
+                  className="flex items-center gap-2 text-sm font-semibold uppercase text-white hover:opacity-80 cursor-pointer"
                 >
                   <span
                     className={`h-3.5 w-3.5 shrink-0 rounded-[3px] border border-white transition-colors duration-200 ${
