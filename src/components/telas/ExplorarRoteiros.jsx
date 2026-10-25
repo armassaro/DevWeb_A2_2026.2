@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Bloco, { filtrarItens } from "../Bloco";
+import { filtrarItens } from "@/lib/dados";
+import { formatarData } from "@/lib/formatos";
+import Bloco from "../Bloco";
 import DetalhesRoteiro from "../DetalhesRoteiro";
 import Modal from "../Modal";
 import RoteiroCard from "../RoteiroCard";
@@ -31,7 +33,7 @@ export default function ExplorarRoteiros({ roteiros, grupos, ultimaAtualizacao }
       <div className="mt-10 mb-4 flex flex-wrap items-end justify-between gap-2">
         <h1 className="font-semibold uppercase text-marinho">Roteiros disponíveis ({visiveis.length})</h1>
         <p className="text-sm text-gray-600">
-          Os roteiros são atualizados uma vez por mês · última atualização em {ultimaAtualizacao.split("-").reverse().join("/")}
+          Os roteiros são atualizados uma vez por mês · última atualização em {formatarData(ultimaAtualizacao)}
         </p>
       </div>
 
@@ -45,7 +47,7 @@ export default function ExplorarRoteiros({ roteiros, grupos, ultimaAtualizacao }
             <li key={roteiro.id}>
               <RoteiroCard
                 titulo={roteiro.titulo}
-                subtitulo={`${roteiro.disciplina} · ${roteiro.ano}`}
+                subtitulo={`${roteiro.disciplina?.nome} · ${roteiro.rotuloAno}`}
                 favoritado={favoritos.includes(roteiro.id)}
                 aoFavoritar={() => alternarFavorito(roteiro.id)}
                 aoAbrir={() => setAbertoId(roteiro.id)}
@@ -56,7 +58,8 @@ export default function ExplorarRoteiros({ roteiros, grupos, ultimaAtualizacao }
       )}
 
       <Modal aberto={Boolean(aberto)} aoFechar={fecharModal} titulo={aberto?.titulo ?? "Roteiro"}>
-        {aberto && <DetalhesRoteiro roteiro={aberto} />}
+        {/* key garante que o estado do texto de apoio seja do roteiro aberto */}
+        {aberto && <DetalhesRoteiro key={aberto.id} roteiro={aberto} />}
       </Modal>
     </>
   );

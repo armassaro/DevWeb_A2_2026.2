@@ -1,3 +1,5 @@
+import { formatarData } from "@/lib/formatos";
+
 export default function SeloIA({ professor, atualizadoEm, revisado = true }) {
   return (
     <div className="rounded-lg border border-navbar/30 bg-navbar/5 p-3 text-sm text-gray-800">
@@ -8,11 +10,11 @@ export default function SeloIA({ professor, atualizadoEm, revisado = true }) {
       {professor && (
         <p>
           {revisado ? "Revisado por" : "Aguardando revisão de"} <strong>Prof. {professor.nome}</strong>
-          {professor.disciplina && ` (${professor.disciplina})`}
-          {professor.escola && ` — ${professor.escola}`}
+          {professor.disciplina && ` (${professor.disciplina.nome})`}
+          {professor.escola && ` — ${professor.escola.nome}`}
         </p>
       )}
-      <p className="text-gray-600">Última atualização: {atualizadoEm.split("-").reverse().join("/")}</p>
+      <p className="text-gray-600">Última atualização: {formatarData(atualizadoEm)}</p>
     </div>
   );
 }

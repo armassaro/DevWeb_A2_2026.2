@@ -1,7 +1,15 @@
+import { exigir } from "@/lib/props";
+
 const COR_DESCONHECIDO = "#9ca3af";
 
 export default function GraficoPizza({ titulo, dados }) {
-  const fatias = Object.entries(dados).map(([nome, { cor, porcentagem }]) => ({ nome, cor, porcentagem }));
+  exigir("GraficoPizza", typeof titulo === "string", "o título precisa ser uma string");
+  exigir("GraficoPizza", dados && typeof dados === "object", "dados precisa ser um objeto");
+
+  const fatias = Object.entries(dados).map(([nome, { cor, porcentagem }]) => {
+    exigir("GraficoPizza", typeof cor === "string" && typeof porcentagem === "number", `fatia "${nome}" inválida`);
+    return { nome, cor, porcentagem };
+  });
 
   // Se as fatias não fecham 100%, o que falta vira "Desconhecido"
   const soma = fatias.reduce((total, f) => total + f.porcentagem, 0);

@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Bloco, { filtrarItens } from "../Bloco";
+import { filtrarItens, montarSolicitacao } from "@/lib/dados";
+import { dataISO, formatarData } from "@/lib/formatos";
+import Bloco from "../Bloco";
 import Botao from "../Botao";
 import DetalhesRoteiro from "../DetalhesRoteiro";
 import DetalhesSolicitacao from "../DetalhesSolicitacao";
@@ -10,14 +12,6 @@ import FormSolicitacao from "../FormSolicitacao";
 import Modal from "../Modal";
 import RoteiroCard from "../RoteiroCard";
 import SecaoColapsavel from "../SecaoColapsavel";
-
-// Data de hoje no formato "2026-10-01"
-function hojeISO() {
-  const data = new Date();
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const dia = String(data.getDate()).padStart(2, "0");
-  return `${data.getFullYear()}-${mes}-${dia}`;
-}
 
 function ListaCards({ itens, vazio, children }) {
   if (itens.length === 0) {
@@ -50,13 +44,13 @@ export default function PainelProfessor({ roteirosIniciais, solicitacoesIniciais
   }
 
   function registrarSolicitacao(dados) {
-    const hoje = hojeISO();
-    const nova = { ...dados, id: `sol-${Date.now()}`, criadoEm: hoje, anoLancamento: hoje.slice(0, 4) };
+    const hoje = dataISO();
+    const nova = montarSolicitacao({ ...dados, id: `sol-${Date.now()}`, criadoEm: hoje });
     setSolicitacoes((atuais) => [nova, ...atuais]);
   }
 
   function aprovarRoteiro(editado) {
-    const hoje = hojeISO();
+    const hoje = dataISO();
     setRoteiros((atuais) =>
       atuais.map((r) =>
         r.id === editado.id
@@ -65,7 +59,7 @@ export default function PainelProfessor({ roteirosIniciais, solicitacoesIniciais
       )
     );
     setModal(null);
-    setAviso(`O roteiro "${editado.titulo}" foi aprovado e publicado em ${hoje.split("-").reverse().join("/")}.`);
+    setAviso(`O roteiro "${editado.titulo}" foi aprovado e publicado em ${formatarData(hoje)}.`);
   }
 
   function cardRoteiro(roteiro, rotulo, tipo) {
@@ -73,7 +67,7 @@ export default function PainelProfessor({ roteirosIniciais, solicitacoesIniciais
       <li key={roteiro.id}>
         <RoteiroCard
           titulo={roteiro.titulo}
-          subtitulo={`${roteiro.disciplina} · ${roteiro.ano} · ${roteiro.anoLancamento}`}
+          subtitulo={`${roteiro.disciplina?.nome} · ${roteiro.rotuloAno} · ${roteiro.anoLancamento}`}
           rotulo={rotulo}
           favoritado={favoritos.includes(roteiro.id)}
           aoFavoritar={() => alternarFavorito(roteiro.id)}
@@ -123,7 +117,7 @@ export default function PainelProfessor({ roteirosIniciais, solicitacoesIniciais
               <li key={s.id}>
                 <RoteiroCard
                   titulo={s.tema}
-                  subtitulo={`${s.disciplina} · ${s.ano} · uso em ${s.dataUso.split("-").reverse().join("/")}`}
+                  subtitulo={`${s.disciplina?.nome} · ${s.rotuloAno} · uso em ${formatarData(s.dataUso)}`}
                   favoritado={favoritos.includes(s.id)}
                   aoFavoritar={() => alternarFavorito(s.id)}
                   aoAbrir={() => setModal({ tipo: "solicitacao", id: s.id })}

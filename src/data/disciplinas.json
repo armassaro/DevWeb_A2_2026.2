@@ -1,0 +1,7 @@
+[
+  { "id": "matematica", "nome": "Matemática" },
+  { "id": "portugues", "nome": "Português" },
+  { "id": "ciencias", "nome": "Ciências" },
+  { "id": "historia", "nome": "História" },
+  { "id": "geografia", "nome": "Geografia" }
+]

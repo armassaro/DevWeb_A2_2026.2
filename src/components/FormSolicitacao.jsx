@@ -1,66 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { formatarData } from "@/lib/formatos";
+import { dataMinimaUso, DOMINIO_EMAIL, MAX_QUESTOES, MIN_QUESTOES, validarSolicitacao } from "@/lib/validacao";
 import Botao from "./Botao";
 import Campo, { estiloEntrada } from "./Campo";
 
-const DOMINIO_EMAIL = "@escola.educa.gov.br";
-const MIN_QUESTOES = 3;
-const MAX_QUESTOES = 10;
-const DIAS_ANTECEDENCIA = 7;
-
-const VAZIO = { nome: "", email: "", disciplina: "", ano: "", tema: "", qtdQuestoes: "", dataUso: "" };
-
-// "2026-10-01" -> "01/10/2026"
-function formatarData(iso) {
-  return iso.split("-").reverse().join("/");
-}
-
-// Primeira data aceita para uso: hoje + 7 dias, no formato "2026-10-01"
-function dataMinimaUso() {
-  const data = new Date();
-  data.setDate(data.getDate() + DIAS_ANTECEDENCIA);
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const dia = String(data.getDate()).padStart(2, "0");
-  return `${data.getFullYear()}-${mes}-${dia}`;
-}
-
-function validar(campos) {
-  const erros = {};
-
-  const nome = campos.nome.trim();
-  if (nome.length < 3) erros.nome = "Informe seu nome completo.";
-  else if (!/^[A-Za-zÀ-ÿ' ]+$/.test(nome)) erros.nome = "O nome deve ter apenas letras.";
-
-  const email = campos.email.trim().toLowerCase();
-  const usuario = email.slice(0, -DOMINIO_EMAIL.length);
-  if (!email) erros.email = "Informe o e-mail institucional.";
-  else if (!email.endsWith(DOMINIO_EMAIL) || !/^[a-z0-9._-]+$/.test(usuario)) {
-    erros.email = `Use o e-mail institucional, terminado em ${DOMINIO_EMAIL}.`;
-  }
-
-  if (!campos.disciplina) erros.disciplina = "Escolha a disciplina.";
-  if (!campos.ano) erros.ano = "Escolha o ano da turma.";
-  if (campos.tema.trim().length < 3) erros.tema = "Descreva o tema (mínimo de 3 letras).";
-
-  const quantidade = Number(campos.qtdQuestoes);
-  if (
-    campos.qtdQuestoes === "" ||
-    !Number.isInteger(quantidade) ||
-    quantidade < MIN_QUESTOES ||
-    quantidade > MAX_QUESTOES
-  ) {
-    erros.qtdQuestoes = `A quantidade deve ser entre ${MIN_QUESTOES} e ${MAX_QUESTOES} questões.`;
-  }
-
-  const minima = dataMinimaUso();
-  if (!campos.dataUso) erros.dataUso = "Informe a data em que vai usar o roteiro.";
-  else if (campos.dataUso < minima) {
-    erros.dataUso = `A revisão leva 7 dias: escolha a partir de ${formatarData(minima)}.`;
-  }
-
-  return erros;
-}
+const VAZIO = { nome: "", email: "", disciplinaId: "", ano: "", tema: "", qtdQuestoes: "", dataUso: "" };
 
 export default function FormSolicitacao({ disciplinas, anos, aoEnviar, aoFechar }) {
   const [campos, setCampos] = useState(VAZIO);
@@ -72,12 +18,12 @@ export default function FormSolicitacao({ disciplinas, anos, aoEnviar, aoFechar 
     const novos = { ...campos, [e.target.name]: e.target.value };
     setCampos(novos);
     // Depois da primeira tentativa, os erros acompanham a digitação
-    if (tentouEnviar) setErros(validar(novos));
+    if (tentouEnviar) setErros(validarSolicitacao(novos));
   }
 
   function enviar(e) {
     e.preventDefault();
-    const encontrados = validar(campos);
+    const encontrados = validarSolicitacao(campos);
     setTentouEnviar(true);
     setErros(encontrados);
     if (Object.keys(encontrados).length > 0) return;
@@ -87,6 +33,7 @@ export default function FormSolicitacao({ disciplinas, anos, aoEnviar, aoFechar 
       nome: campos.nome.trim(),
       email: campos.email.trim().toLowerCase(),
       tema: campos.tema.trim(),
+      ano: Number(campos.ano),
       qtdQuestoes: Number(campos.qtdQuestoes),
     };
     aoEnviar(solicitacao);
@@ -101,16 +48,19 @@ export default function FormSolicitacao({ disciplinas, anos, aoEnviar, aoFechar 
   }
 
   if (enviado) {
+    const disciplina = disciplinas.find((d) => d.id === enviado.disciplinaId);
     return (
       <div role="status" className="space-y-4">
         <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-4 text-emerald-900">
           <p className="font-semibold">Pedido registrado com sucesso!</p>
           <p className="text-sm">
-            Roteiro de {enviado.disciplina} ({enviado.ano}) sobre &quot;{enviado.tema}&quot;, com {enviado.qtdQuestoes}{" "}
+            Roteiro de {disciplina?.nome} ({enviado.ano}º ano) sobre &quot;{enviado.tema}&quot;, com {enviado.qtdQuestoes}{" "}
             questões, para uso em {formatarData(enviado.dataUso)}. Ele já aparece na lista de solicitados.
           </p>
         </div>
-        <p className="text-sm text-gray-600">Por enquanto o pedido fica apenas nesta página e some ao recarregar.</p>
+        <p className="text-sm text-gray-600">
+          Por enquanto o pedido fica apenas nesta página; nenhum dado é enviado para um servidor.
+        </p>
         <div className="flex flex-wrap justify-end gap-3">
           <Botao texto="Fazer outro pedido" variante="secundario" acao={novaSolicitacao} />
           <Botao texto="Fechar" acao={aoFechar} />
@@ -154,12 +104,12 @@ export default function FormSolicitacao({ disciplinas, anos, aoEnviar, aoFechar 
       </Campo>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Campo rotulo="Disciplina" htmlFor="disciplina" erro={erros.disciplina}>
-          <select id="disciplina" name="disciplina" value={campos.disciplina} onChange={alterar} className={estiloEntrada} {...propsErro("disciplina")}>
+        <Campo rotulo="Disciplina" htmlFor="disciplinaId" erro={erros.disciplinaId}>
+          <select id="disciplinaId" name="disciplinaId" value={campos.disciplinaId} onChange={alterar} className={estiloEntrada} {...propsErro("disciplinaId")}>
             <option value="">Selecione</option>
-            {disciplinas.map((disciplina) => (
-              <option key={disciplina} value={disciplina}>
-                {disciplina}
+            {disciplinas.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.nome}
               </option>
             ))}
           </select>
@@ -168,9 +118,9 @@ export default function FormSolicitacao({ disciplinas, anos, aoEnviar, aoFechar 
         <Campo rotulo="Ano da turma" htmlFor="ano" erro={erros.ano}>
           <select id="ano" name="ano" value={campos.ano} onChange={alterar} className={estiloEntrada} {...propsErro("ano")}>
             <option value="">Selecione</option>
-            {anos.map((ano) => (
-              <option key={ano} value={ano}>
-                {ano}
+            {anos.map((a) => (
+              <option key={a.valor} value={a.valor}>
+                {a.rotulo}
               </option>
             ))}
           </select>

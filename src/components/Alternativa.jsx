@@ -1,6 +1,11 @@
 "use client";
 
+import { exigir, ehEstado } from "@/lib/props";
+
 export default function Alternativa({ texto, indice, selecao, multipla = false }) {
+  exigir("Alternativa", typeof texto === "string", "o texto da alternativa precisa ser uma string");
+  exigir("Alternativa", Number.isInteger(indice), "indice precisa ser um número inteiro");
+  exigir("Alternativa", ehEstado(selecao) && Array.isArray(selecao[0]), "selecao deve ser [selecionadas, setSelecionadas]");
   const [selecionadas, setSelecionadas] = selecao;
   const marcada = selecionadas.includes(indice);
 

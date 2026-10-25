@@ -1,27 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { validarAvaliacao } from "@/lib/validacao";
 import Botao from "./Botao";
 import Campo, { estiloEntrada } from "./Campo";
 import { IconeRelogio } from "./Icones";
 import SeloIA from "./SeloIA";
-
-function validar(campos) {
-  const erros = {};
-  if (campos.titulo.trim().length < 3) erros.titulo = "O título é obrigatório.";
-  if (campos.tema.trim().length < 3) erros.tema = "O tema é obrigatório.";
-  if (campos.descricao.trim().length < 20) erros.descricao = "A descrição precisa ter pelo menos 20 caracteres.";
-
-  const tempo = Number(campos.tempoEstimado);
-  if (!Number.isInteger(tempo) || tempo < 5 || tempo > 180) {
-    erros.tempoEstimado = "Informe um tempo entre 5 e 180 minutos.";
-  }
-
-  if (!/^https?:\/\/\S+\.\S+/.test(campos.fonteExterna.trim())) {
-    erros.fonteExterna = "Informe um link válido, começando com http:// ou https://.";
-  }
-  return erros;
-}
 
 export default function FormAvaliacao({ roteiro, aoCancelar, aoAprovar }) {
   const [campos, setCampos] = useState({
@@ -39,7 +23,7 @@ export default function FormAvaliacao({ roteiro, aoCancelar, aoAprovar }) {
 
   function aprovar(e) {
     e.preventDefault();
-    const encontrados = validar(campos);
+    const encontrados = validarAvaliacao(campos);
     setErros(encontrados);
     if (Object.keys(encontrados).length > 0) return;
 
@@ -62,7 +46,7 @@ export default function FormAvaliacao({ roteiro, aoCancelar, aoAprovar }) {
     <form onSubmit={aprovar} noValidate className="space-y-4">
       <h2 className="text-lg font-semibold text-marinho">Avaliar roteiro</h2>
       <p className="text-sm text-gray-600">
-        {roteiro.disciplina} · {roteiro.ano}
+        {roteiro.disciplina?.nome} · {roteiro.rotuloAno}
       </p>
 
       <Campo rotulo="Título" htmlFor="titulo" erro={erros.titulo}>

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { exigir } from "@/lib/props";
 
 // Só baixa a barra de busca e os filtros quando o bloco for usado nesse formato
 const SearchBar = dynamic(() => import("./SearchBar"), {
@@ -8,29 +9,11 @@ const SearchBar = dynamic(() => import("./SearchBar"), {
 });
 const FilterOptions = dynamic(() => import("./FilterOptions"));
 
-function normalizar(texto) {
-  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-}
-
-// Aplica os filtros e a busca do bloco. Dentro de um mesmo grupo as opções somam (OU); entre grupos diferentes, restringem (E)
-export function filtrarItens(itens, selecionadas, termo, grupos) {
-  const ativas = (grupo) => grupo.filter((opcao) => selecionadas.includes(opcao));
-  const anosAtivos = ativas(grupos.anos);
-  const disciplinasAtivas = ativas(grupos.disciplinas);
-  const lancamentosAtivos = ativas(grupos.lancamentos);
-  const busca = normalizar(termo.trim());
-
-  return itens.filter(
-    (item) =>
-      (anosAtivos.length === 0 || anosAtivos.includes(item.ano)) &&
-      (disciplinasAtivas.length === 0 || disciplinasAtivas.includes(item.disciplina)) &&
-      (lancamentosAtivos.length === 0 || lancamentosAtivos.includes(item.anoLancamento)) &&
-      (busca === "" || normalizar(`${item.tema} ${item.titulo ?? ""}`).includes(busca))
-  );
-}
-
 export default function Bloco({ conteudo, aoBuscar }) {
+  exigir("Bloco", Array.isArray(conteudo) && [1, 2].includes(conteudo.length), "conteudo deve ser um array com 1 ou 2 itens");
+
   if (conteudo.length === 1) {
+    exigir("Bloco", typeof conteudo[0] === "string", "com um item só, ele precisa ser um texto");
     return (
       <section className="w-full break-words rounded-2xl bg-marinho px-5 py-4 text-white sm:text-lg">
         {conteudo[0]}

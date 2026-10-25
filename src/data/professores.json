@@ -1,0 +1,7 @@
+[
+  { "id": "prof-01", "nome": "Ana Beatriz Santos", "email": "ana.santos@escola.educa.gov.br", "disciplinaId": "matematica", "escolaId": "esc-01" },
+  { "id": "prof-02", "nome": "Carlos Eduardo Lima", "email": "carlos.lima@escola.educa.gov.br", "disciplinaId": "portugues", "escolaId": "esc-02" },
+  { "id": "prof-03", "nome": "Fernanda Oliveira", "email": "fernanda.oliveira@escola.educa.gov.br", "disciplinaId": "ciencias", "escolaId": "esc-01" },
+  { "id": "prof-04", "nome": "Roberto Almeida", "email": "roberto.almeida@escola.educa.gov.br", "disciplinaId": "historia", "escolaId": "esc-03" },
+  { "id": "prof-05", "nome": "Juliana Pereira", "email": "juliana.pereira@escola.educa.gov.br", "disciplinaId": "geografia", "escolaId": "esc-02" }
+]

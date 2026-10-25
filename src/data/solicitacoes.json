@@ -1,0 +1,7 @@
+[
+  { "id": "sol-01", "nome": "Ana Beatriz Santos", "email": "ana.santos@escola.educa.gov.br", "disciplinaId": "matematica", "ano": 9, "tema": "Teorema de Pitágoras", "qtdQuestoes": 5, "dataUso": "2026-11-10", "criadoEm": "2026-10-15" },
+  { "id": "sol-02", "nome": "Carlos Eduardo Lima", "email": "carlos.lima@escola.educa.gov.br", "disciplinaId": "portugues", "ano": 6, "tema": "Pontuação", "qtdQuestoes": 4, "dataUso": "2026-11-03", "criadoEm": "2026-10-16" },
+  { "id": "sol-03", "nome": "Fernanda Oliveira", "email": "fernanda.oliveira@escola.educa.gov.br", "disciplinaId": "ciencias", "ano": 9, "tema": "Tabela periódica", "qtdQuestoes": 6, "dataUso": "2026-11-17", "criadoEm": "2026-10-18" },
+  { "id": "sol-04", "nome": "Roberto Almeida", "email": "roberto.almeida@escola.educa.gov.br", "disciplinaId": "historia", "ano": 7, "tema": "Grandes Navegações", "qtdQuestoes": 5, "dataUso": "2026-11-05", "criadoEm": "2026-10-19" },
+  { "id": "sol-05", "nome": "Juliana Pereira", "email": "juliana.pereira@escola.educa.gov.br", "disciplinaId": "geografia", "ano": 8, "tema": "Continente africano", "qtdQuestoes": 3, "dataUso": "2025-12-01", "criadoEm": "2025-11-20" }
+]

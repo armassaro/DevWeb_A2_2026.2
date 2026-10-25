@@ -1,8 +1,13 @@
 "use client";
 
+import { exigir } from "@/lib/props";
 import { IconeEstrela, IconeSeta } from "./Icones";
 
 export default function RoteiroCard({ titulo, subtitulo, rotulo = "Detalhes", favoritado = false, aoFavoritar, aoAbrir }) {
+  exigir("RoteiroCard", typeof titulo === "string", "o título precisa ser uma string");
+  exigir("RoteiroCard", typeof favoritado === "boolean", "favoritado precisa ser booleano");
+  exigir("RoteiroCard", typeof aoAbrir === "function", "aoAbrir precisa ser uma função");
+
   return (
     <div
       role="button"

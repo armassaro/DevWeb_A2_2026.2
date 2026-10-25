@@ -1,16 +1,11 @@
 "use client";
 
+import { formatarMinutos } from "@/lib/formatos";
 import Botao from "./Botao";
 import Campo, { estiloCaixa } from "./Campo";
 import { IconeRelogio } from "./Icones";
 import SeloIA from "./SeloIA";
-
-function formatarMinutos(minutos) {
-  if (minutos < 60) return `${minutos} minutos`;
-  const horas = Math.floor(minutos / 60);
-  const resto = minutos % 60;
-  return resto ? `${horas}h ${resto}min` : `${horas}h`;
-}
+import TextoApoio from "./TextoApoio";
 
 export default function DetalhesRoteiro({ roteiro, mostrarQuestionario = true }) {
   const publicado = roteiro.status === "publicado";
@@ -29,7 +24,7 @@ export default function DetalhesRoteiro({ roteiro, mostrarQuestionario = true })
       </Campo>
       <Campo rotulo="Disciplina e ano">
         <p className={estiloCaixa}>
-          {roteiro.disciplina} · {roteiro.ano}
+          {roteiro.disciplina?.nome} · {roteiro.rotuloAno}
         </p>
       </Campo>
       <Campo rotulo="Descrição">
@@ -49,10 +44,12 @@ export default function DetalhesRoteiro({ roteiro, mostrarQuestionario = true })
         </a>
       </Campo>
       <Campo rotulo="Questionário">
-        <p className={estiloCaixa}>{roteiro.qtdQuestoes} questões de fixação com correção</p>
+        <p className={estiloCaixa}>{roteiro.questoes.length} questões de fixação com correção</p>
       </Campo>
 
       <SeloIA professor={roteiro.professor} atualizadoEm={roteiro.atualizadoEm} revisado={publicado} />
+
+      <TextoApoio termo={roteiro.termoWikipedia} />
 
       {mostrarQuestionario && publicado && (
         <div className="flex justify-end pt-2">

@@ -62,7 +62,7 @@ export default function Questionario({ roteiro }) {
   const cabecalho = (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
       <p className="text-sm text-gray-600">
-        Questionário · <strong className="text-marinho">{roteiro.titulo}</strong> ({roteiro.disciplina}, {roteiro.ano})
+        Questionário · <strong className="text-marinho">{roteiro.titulo}</strong> ({roteiro.disciplina?.nome}, {roteiro.rotuloAno})
       </p>
       <Link href="/" className="text-sm text-navbar underline">
         Voltar aos roteiros

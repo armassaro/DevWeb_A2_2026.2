@@ -1,6 +1,14 @@
 "use client";
 
+import { exigir, ehEstado } from "@/lib/props";
+
 export default function FilterOptions({ opcoes }) {
+  exigir("FilterOptions", Array.isArray(opcoes) && ehEstado(opcoes[0]), "o primeiro item deve ser [selecionadas, setSelecionadas]");
+  exigir(
+    "FilterOptions",
+    opcoes.slice(1).every((grupo) => Array.isArray(grupo) && grupo.every((o) => typeof o === "string")),
+    "os grupos de opções devem ser arrays de strings"
+  );
   const [[selecionadas, setSelecionadas], ...grupos] = opcoes;
 
   function alternar(opcao) {

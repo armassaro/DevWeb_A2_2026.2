@@ -1,11 +1,16 @@
 "use client";
 
+import { exigir } from "@/lib/props";
+
 const VARIANTES = {
   primario: "bg-marinho text-white",
   secundario: "border border-marinho bg-white text-marinho",
 };
 
 export default function Botao({ texto, acao, tipo = "button", variante = "primario", desabilitado = false }) {
+  exigir("Botao", typeof texto === "string", "o texto do botão precisa ser uma string");
+  exigir("Botao", tipo === "submit" || typeof acao === "function", "informe a função com a ação do botão");
+
   return (
     <button
       type={tipo}

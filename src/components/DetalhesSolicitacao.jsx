@@ -1,15 +1,16 @@
+import { formatarData } from "@/lib/formatos";
 import Campo, { estiloCaixa } from "./Campo";
 
 export default function DetalhesSolicitacao({ solicitacao }) {
   const linhas = [
     ["Professor(a)", solicitacao.nome],
     ["E-mail", solicitacao.email],
-    ["Disciplina", solicitacao.disciplina],
-    ["Ano", solicitacao.ano],
+    ["Disciplina", solicitacao.disciplina?.nome],
+    ["Ano", solicitacao.rotuloAno],
     ["Tema", solicitacao.tema],
     ["Quantidade de questões", solicitacao.qtdQuestoes],
-    ["Data de uso", solicitacao.dataUso.split("-").reverse().join("/")],
-    ["Solicitado em", solicitacao.criadoEm.split("-").reverse().join("/")],
+    ["Data de uso", formatarData(solicitacao.dataUso)],
+    ["Solicitado em", formatarData(solicitacao.criadoEm)],
   ];
 
   return (

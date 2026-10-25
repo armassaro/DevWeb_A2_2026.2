@@ -1,11 +1,13 @@
 "use client";
 
 import { useId } from "react";
+import { exigir, ehEstado } from "@/lib/props";
 import { IconeFechar, IconeLupa } from "./Icones";
 
 export const LIMITE_BUSCA = 300;
 
 export default function SearchBar({ estado, aoBuscar }) {
+  exigir("SearchBar", ehEstado(estado) && typeof estado[0] === "string", "estado deve ser [texto, setTexto, textoSuperior?]");
   const [texto, setTexto, textoSuperior = "Buscar por tema"] = estado;
   const id = useId();
 
